@@ -13,6 +13,7 @@ namespace email_app_api.Controllers
         [HttpPost]
         public LoginResponse Get()
         {
+            //update last time active
             LoginResponse loginResponse = new LoginResponse()
             {
                 UserId = 10,
