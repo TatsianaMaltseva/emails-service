@@ -1,3 +1,4 @@
+using AutoMapper;
 using email_app_api.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -21,7 +22,17 @@ namespace email_app_api
 
             services.AddControllers();
 
+            MapperConfiguration mapperConfiguration = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new Services.Mapper());
+            });
+
+            IMapper mapper = mapperConfiguration.CreateMapper();
+            services.AddSingleton(mapper);
+
             services.AddSingleton<UserService>();
+
+            services.Configure<EmailAppDbOptions>(Configuration.GetSection("EmailAppDb"));
 
             services.AddCors(options =>
             {

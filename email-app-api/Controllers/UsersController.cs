@@ -1,6 +1,7 @@
 ﻿using email_app_api.Models;
 using email_app_api.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 namespace email_app_api.Controllers
 {
@@ -9,6 +10,7 @@ namespace email_app_api.Controllers
     public class UsersController : Controller
     {
         private readonly UserService userService;
+
         public UsersController(
             UserService userService
         ){
@@ -26,9 +28,15 @@ namespace email_app_api.Controllers
             return Unauthorized("Such user does not exist");
         }
 
-        public User[] GetUsers()
+        [HttpGet]
+        public IActionResult GetUsers([FromQuery] int currentUserId)
         {
-            return null;
+            List<User> users = userService.GetUsers(currentUserId);
+            if (users != null)
+            {
+                return Ok(users);
+            }
+            return BadRequest("Not enough rights");
         }
     }
 }

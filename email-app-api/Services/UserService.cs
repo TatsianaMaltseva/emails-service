@@ -1,35 +1,41 @@
-﻿using email_app_api.Models;
+﻿using AutoMapper;
+using email_app_api.Models;
 using Microsoft.Data.Sqlite;
+using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 
 namespace email_app_api.Services
 {
     public class UserService
     {
-        string connectionString = "Data Source=C:/Users/Msltzeva Tatiana/AppData/Local/Temp/Rar$EXa0.224/SQLiteStudio/fileData.db";
-        //options
+        private readonly string connectionString;
+        private readonly IMapper mapper;
+
+        public UserService(IMapper mapper, IOptions<EmailAppDbOptions> dbOptions)
+        {
+            this.mapper = mapper;
+            connectionString = dbOptions.Value.ConnectionString;
+        }
+
         public LoginResponse Login(LoginRequest loginRequest)
         {
             UserEntity user = GetUser(loginRequest.Email, loginRequest.Password);
             if (user != null)
             {
-                return new LoginResponse()
-                {
-                    Id = user.Id,
-                    Role = user.Role
-                };
+                return mapper.Map<LoginResponse>(user);
             }
             return null;
         }
 
-        public List<UserEntity> GetUsers(int userId)
+        public List<User> GetUsers(int currerntUserId)
         {
-            UserEntity user = GetUser(userId);
+            UserEntity user = GetUser(currerntUserId);
             if (user.Role != "Admin")
             {
-                return new List<UserEntity>();
+                return null;
             }
-            return GetUsers();
+            List<UserEntity> userEntities = GetUsers();
+            return mapper.Map<List<UserEntity>, List<User>>(userEntities);
         }
 
         private List<UserEntity> GetUsers()
@@ -45,13 +51,7 @@ namespace email_app_api.Services
                 {
                     while(reader.Read())
                     {
-                        UserEntity user = new UserEntity()
-                        {
-                            Id = reader.GetInt32(0),
-                            Email = reader.GetString(1),
-                            Password = reader.GetString(2),
-                            Role = reader.GetString(3)
-                        };
+                        UserEntity user = GetUserFromReader(reader);
                         userEntities.Add(user);
                     }
                 }
@@ -70,22 +70,15 @@ namespace email_app_api.Services
                 if (reader.HasRows)
                 {
                     reader.Read();
-                    UserEntity user = new UserEntity()
-                    {
-                        Id = reader.GetInt32(0),
-                        Email = reader.GetString(1),
-                        Password = reader.GetString(2),
-                        Role = reader.GetString(3)
-                    };
-                    return user;
+                    return GetUserFromReader(reader);
                 }
             }
             return null;
         }
 
-        private UserEntity GetUser(int id)
+        private UserEntity GetUser(int currerntUserId)
         {
-            string sqlExpression = $"SELECT * FROM Users WHERE Id = \"{id}\"";
+            string sqlExpression = $"SELECT * FROM Users WHERE Id = \"{currerntUserId}\"";
             using var connection = new SqliteConnection(connectionString);
             connection.Open();
             SqliteCommand command = new SqliteCommand(sqlExpression, connection);
@@ -94,17 +87,21 @@ namespace email_app_api.Services
                 if (reader.HasRows)
                 {
                     reader.Read();
-                    UserEntity user = new UserEntity()
-                    {
-                        Id = reader.GetInt32(0),
-                        Email = reader.GetString(1),
-                        Password = reader.GetString(2),
-                        Role = reader.GetString(3)
-                    };
-                    return user;
+                    return GetUserFromReader(reader);
                 }
             }
             return null;
+        }
+
+        private UserEntity GetUserFromReader (SqliteDataReader reader)
+        {
+            return new UserEntity()
+            {
+                Id = reader.GetInt32(0),
+                Email = reader.GetString(1),
+                Password = reader.GetString(2),
+                Role = reader.GetString(3)
+            };
         }
     }
 }

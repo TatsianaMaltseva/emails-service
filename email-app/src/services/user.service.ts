@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -6,14 +6,20 @@ import { tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 
 export interface LoginResponse {
-  role: string;
   id: number;
+  role: string;
+}
+
+export interface User {
+  id: number,
+  email: string,
+  role: string
 }
 
 @Injectable({
   providedIn: 'root'
 })
-export class LoginService {
+export class UserService {
   private readonly apiUrl: string;
   private _id: number | undefined;
   private _role: string | undefined;
@@ -53,6 +59,18 @@ export class LoginService {
           this._id = userData.id;
           this._role = userData.role;
         })
+      )
+  }
+
+  public getUsers(): Observable<User[]> {
+    let httpParams = new HttpParams();
+    if (this.id) {
+      httpParams = httpParams.set('currentUserId', this.id);
+    }
+    return this.http
+      .get<User[]>(
+        `${this.apiUrl}users`,
+        { params : httpParams }
       )
   }
 }

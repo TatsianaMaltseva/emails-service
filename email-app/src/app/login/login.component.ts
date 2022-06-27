@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 
-import { LoginService } from 'src/services/login.service';
+import { UserService } from 'src/services/user.service';
 import { LoginDialogComponent } from '../login-dialog/login-dialog.component';
 
 @Component({
@@ -26,7 +26,7 @@ export class LoginComponent{
 
   public constructor(
     private readonly formBuilder: FormBuilder,
-    private readonly loginService: LoginService,
+    private readonly userService: UserService,
     private readonly marDialogRef: MatDialogRef<LoginDialogComponent>
     ) {
     this.authForm = formBuilder.group({
@@ -42,15 +42,22 @@ export class LoginComponent{
   }
 
   public login(email: string, password: string): void {
-    this.loginService
+    this.userService
       .login(email, password)
       .subscribe(
         () => {
           this.marDialogRef.close();
+          this.getUsers();
         },
         (serverError: HttpErrorResponse) => {
           this.serverErrorResponse = serverError.error as string;
         }
       );
   };
+
+  public getUsers(): void {
+    this.userService
+      .getUsers()
+      .subscribe(users => console.log(users));
+  }
 }
