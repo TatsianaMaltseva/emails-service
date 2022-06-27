@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using email_app_api.Models;
+using email_app_api.Services;
+using Microsoft.AspNetCore.Mvc;
 
 namespace email_app_api.Controllers
 {
@@ -6,20 +8,27 @@ namespace email_app_api.Controllers
     [Route("[controller]")]
     public class UsersController : Controller
     {
-        public UsersController()
-        {
+        private readonly UserService userService;
+        public UsersController(
+            UserService userService
+        ){
+            this.userService = userService;
         }
 
         [HttpPost]
-        public LoginResponse Get()
+        public IActionResult Login(LoginRequest loginRequest)
         {
-            //update last time active
-            LoginResponse loginResponse = new LoginResponse()
+            LoginResponse loginResponse = userService.Login(loginRequest);
+            if (loginResponse != null)
             {
-                UserId = 10,
-                Role = "Admin"
-            };
-            return loginResponse;
+                return Ok(loginResponse);
+            }
+            return Unauthorized("Such user does not exist");
+        }
+
+        public User[] GetUsers()
+        {
+            return null;
         }
     }
 }

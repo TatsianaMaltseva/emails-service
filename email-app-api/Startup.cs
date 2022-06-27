@@ -1,3 +1,4 @@
+using email_app_api.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -19,6 +20,8 @@ namespace email_app_api
         {
 
             services.AddControllers();
+
+            services.AddSingleton<UserService>();
 
             services.AddCors(options =>
             {

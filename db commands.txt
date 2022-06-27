@@ -1,0 +1,12 @@
+CREATE TABLE [Users] (
+    [Id] INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+    [Email] NVARCHAR (125) NOT NULL,
+    [Password] CHAR (50) NOT NULL,
+    [Role] NVARCHAR (25) NOT NULL
+);
+
+INSERT INTO Users ( Email, Password, Role)
+VALUES ("client@com", 1111, "Client"),
+    ("admin@com", 1111, "Admin"),
+    ("Billy@com", 1234, "Client"),
+    ("Ben@com", 5678, "Client");

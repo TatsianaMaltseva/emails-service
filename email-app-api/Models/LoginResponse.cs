@@ -1,8 +1,8 @@
-namespace email_app_api
+namespace email_app_api.Models
 {
     public class LoginResponse
     {
-        public int UserId { get; set; }
+        public int Id { get; set; }
 
         public string Role { get; set; }
     }
