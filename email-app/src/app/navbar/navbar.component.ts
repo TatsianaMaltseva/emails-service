@@ -38,7 +38,7 @@ export class NavbarComponent {
     this.matDialog.open(
       TaskComponent,
       {
-        width: '600px'
+        width: '1500px'
       }
     )
   };

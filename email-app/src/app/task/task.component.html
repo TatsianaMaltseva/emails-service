@@ -1,2 +1,3 @@
-<button mat-button>Create</button>
+<cron-editor [formControl]="cronForm" [options]="cronOptions"></cron-editor>
+<button mat-button (click)="createTask()">Create</button>
 <button mat-button mat-dialog-close>Close</button>

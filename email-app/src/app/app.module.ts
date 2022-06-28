@@ -7,6 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
+import { CronEditorModule } from 'ngx-cron-editor';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -34,7 +35,8 @@ import { TaskDialogComponent } from './task-dialog/task-dialog.component';
     HttpClientModule,
     MatInputModule,
     MatDialogModule,
-    MatIconModule
+    MatIconModule,
+    CronEditorModule
   ],
   providers: [],
   bootstrap: [AppComponent]
