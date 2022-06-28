@@ -3,6 +3,7 @@ using email_app_api.Models;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Options;
 using System;
+using System.Collections.Generic;
 
 namespace email_app_api.Services
 {
@@ -32,6 +33,39 @@ namespace email_app_api.Services
                 return mapper.Map<Task>(taskEntity);
             }
             return null;
+        }
+
+        public List<Task> GetTasks(int userId)
+        {
+            string sqlExpression = $"SELECT * FROM Tasks WHERE UserId = \"{userId}\"";
+            using var connection = new SqliteConnection(connectionString);
+            List<Task> tasks = new List<Task>();
+            connection.Open();
+            SqliteCommand command = new SqliteCommand(sqlExpression, connection);
+            using (SqliteDataReader reader = command.ExecuteReader())
+            {
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        TaskEntity task = GetTaskFromReader(reader);
+                        tasks.Add(mapper.Map<Task>(task));
+                    }
+                }
+            }
+            return tasks;
+        }
+
+        private TaskEntity GetTaskFromReader (SqliteDataReader reader)
+        {
+            return new TaskEntity()
+            {
+                Id = reader.GetInt32(0),
+                UserId = reader.GetInt32(1),
+                Name = reader.GetString(2),
+                Description = reader.GetString(3),
+                Cron = reader.GetString(4)
+            };
         }
     }
 }
