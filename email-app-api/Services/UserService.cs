@@ -30,7 +30,7 @@ namespace email_app_api.Services
         public List<User> GetUsers(int currerntUserId)
         {
             UserEntity user = GetUser(currerntUserId);
-            if (user.Role != "Admin")
+            if (user.Role != Roles.Admin)
             {
                 return null;
             }

@@ -1,4 +1,6 @@
 <button mat-raised-button (click)="openLoginDialog()">Login</button>
-<button mat-raised-button>Tasks</button>
-<button mat-raised-button>Add new task</button>
-<button mat-raised-button *ngIf="isAdmin">Users</button>
+<span *ngIf="isLoggedIn">
+    <button mat-raised-button>Tasks</button>
+    <button mat-raised-button>Add new task</button>
+    <button mat-raised-button *ngIf="isAdmin">Users</button>
+</span>

@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
 import { environment } from 'src/environments/environment';
+import { roles } from 'src/Roles';
 
 export interface LoginResponse {
   id: number;
@@ -40,6 +41,10 @@ export class UserService {
 
   public get isLoggedIn(): boolean {
     return !!this._id;
+  }
+
+  public get isAdmin(): boolean {
+    return this.isLoggedIn && this.role === roles.admin
   }
 
   public constructor(
