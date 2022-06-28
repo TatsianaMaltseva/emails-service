@@ -1,0 +1,18 @@
+<mat-list>
+    <span *ngFor="let task of tasks; last as last">
+        <mat-list-item class="list-element">
+            <span class="inlineLeft">
+                {{ task.name }} {{ task.name }} {{ task.description }}
+            </span>
+            <span class="inlineRight">
+                <button mat-raised-button (click)="openEditTaskDialog(task)">
+                    <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-raised-button (click)="deleteTask(task.id)">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </span>
+            <mat-divider *ngIf="!last"></mat-divider>
+        </mat-list-item>
+    </span>
+</mat-list>

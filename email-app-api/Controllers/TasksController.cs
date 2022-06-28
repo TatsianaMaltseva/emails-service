@@ -30,5 +30,15 @@ namespace email_app_api.Controllers
         {
             return taskService.GetTasks(userId);
         }
+
+        [HttpDelete]
+        [Route("users/{userId}/[controller]/{taskId}")]
+        public IActionResult DeleteTask([FromRoute] int taskId)
+        {
+            bool ifWasDeleted = taskService.DeleteTask(taskId);
+            return ifWasDeleted
+                ? NoContent()
+                : BadRequest("Task was not deleted");
+        }
     }
 }

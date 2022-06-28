@@ -50,5 +50,20 @@ export class TaskService {
       .get<Task[]>(
         `${this.apiUrl}users/${userId}/tasks`
       )
+      .pipe(
+        tap((tasks: Task[]) =>
+          this._tasks = tasks
+        )
+      )
+  }
+
+  public deleteTask(taskId: number): Observable<string> {
+    return this.http
+      .delete<string>(
+        `${this.apiUrl}users/${this.userService.id}/tasks/${taskId}`
+      )
+      .pipe(
+        tap(() => this._tasks = this._tasks.filter(task => task.id !== taskId))
+      );
   }
 }

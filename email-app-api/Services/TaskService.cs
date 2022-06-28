@@ -56,6 +56,16 @@ namespace email_app_api.Services
             return tasks;
         }
 
+        public bool DeleteTask(int taskId)
+        {
+            string sqlExpression = $"DELETE FROM Tasks WHERE Id = \"{taskId}\"";
+            using var connection = new SqliteConnection(connectionString);
+            connection.Open();
+            SqliteCommand command = new SqliteCommand(sqlExpression, connection);
+            bool ifWasDeleted = command.ExecuteNonQuery() != 0;
+            return ifWasDeleted;
+        }
+
         private TaskEntity GetTaskFromReader (SqliteDataReader reader)
         {
             return new TaskEntity()
