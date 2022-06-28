@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { CronOptions } from 'ngx-cron-editor';
 
@@ -11,7 +11,7 @@ import { TaskDialogComponent } from '../task-dialog/task-dialog.component';
   styleUrls: ['./task.component.css']
 })
 export class TaskComponent implements OnInit {
-  cronForm: FormControl<string | null>;
+  public changeTaskForm: FormGroup;
 
   public cronOptions: CronOptions = {
     defaultTime: "00:00:00",
@@ -27,15 +27,23 @@ export class TaskComponent implements OnInit {
     hideSpecificMonthWeekTab : false,
 
     use24HourTime: true,
-    hideSeconds: true,
+    hideSeconds: false,
 
-    cronFlavor: "Standart"
+    cronFlavor: "standart"
  };
  
   public constructor(
-    private readonly marDialogRef: MatDialogRef<TaskDialogComponent>
+    private readonly marDialogRef: MatDialogRef<TaskDialogComponent>,
+    private readonly formBuilder: FormBuilder
   ) {
-    this.cronForm = new FormControl('0 0 1/1 * *');
+    this.changeTaskForm = formBuilder.group(
+      {
+        id: [''],
+        name: ['', Validators.required],
+        description: [''],
+        cron: ['0 0 1/1 * *']
+      }
+    )
   }
 
   public ngOnInit(): void {
@@ -43,7 +51,7 @@ export class TaskComponent implements OnInit {
   }
 
   public createTask(): void {
-    console.log(this.cronForm.value);
+    console.log(this.changeTaskForm.value);
   }
 
   private closeDialog(): void {

@@ -1,3 +1,22 @@
-<cron-editor [formControl]="cronForm" [options]="cronOptions"></cron-editor>
-<button mat-button (click)="createTask()">Create</button>
-<button mat-button mat-dialog-close>Close</button>
+<form [formGroup]="changeTaskForm">
+    <mat-form-field class="input-field">
+        <mat-label>Name</mat-label>
+        <input matInput formControlName="name">
+        <mat-error>
+            Name is required
+        </mat-error>
+    </mat-form-field>
+    <mat-form-field class="input-field">
+        <mat-label>Description</mat-label>
+        <textarea 
+            matInput
+            cdkTextareaAutosize
+            formControlName="description"
+            cdkAutosizeMinRows="2"
+            cdkAutosizeMaxRows="35"
+        ></textarea>
+    </mat-form-field>
+    <cron-editor formControlName="cron" [options]="cronOptions"></cron-editor>
+    <button mat-button (click)="createTask()">Create</button>
+    <button mat-button mat-dialog-close>Close</button>
+</form>
