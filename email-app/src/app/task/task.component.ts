@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { CronOptions } from 'ngx-cron-editor';
+import { TaskService } from 'src/services/task.service';
 
 import { TaskDialogComponent } from '../task-dialog/task-dialog.component';
 
@@ -34,7 +35,8 @@ export class TaskComponent implements OnInit {
  
   public constructor(
     private readonly marDialogRef: MatDialogRef<TaskDialogComponent>,
-    private readonly formBuilder: FormBuilder
+    private readonly formBuilder: FormBuilder,
+    private readonly taskService: TaskService
   ) {
     this.changeTaskForm = formBuilder.group(
       {
@@ -51,7 +53,9 @@ export class TaskComponent implements OnInit {
   }
 
   public createTask(): void {
-    console.log(this.changeTaskForm.value);
+    this.taskService
+      .createTask(this.changeTaskForm.value)
+      .subscribe();
   }
 
   private closeDialog(): void {
