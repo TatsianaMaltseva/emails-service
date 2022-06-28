@@ -15,7 +15,6 @@ export class TasksComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-
     const userId = this.userService.id;
     if (userId) {
       this.taskService

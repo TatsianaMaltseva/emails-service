@@ -53,10 +53,4 @@ export class LoginComponent{
         }
       );
   };
-
-  // public getUsers(): void {
-  //   this.userService
-  //     .getUsers()
-  //     .subscribe(users => console.log(users));
-  // }
 }

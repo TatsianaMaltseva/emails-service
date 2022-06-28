@@ -1,0 +1,8 @@
+<mat-list>
+    <span *ngFor="let user of users; last as last">
+        <mat-list-item class="list-element">
+            {{ user.id }} {{ user.email }} {{ user.role }}
+            <mat-divider *ngIf="!last"></mat-divider>
+        </mat-list-item>
+    </span>
+</mat-list>

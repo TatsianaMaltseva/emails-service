@@ -7,6 +7,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
+import { MatListModule } from '@angular/material/list';
+import { MatGridListModule } from '@angular/material/grid-list';
 import { CronEditorModule } from 'ngx-cron-editor';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -18,6 +20,7 @@ import { TaskComponent } from './task/task.component';
 import { TaskDialogComponent } from './task-dialog/task-dialog.component';
 import { TasksComponent } from './tasks/tasks.component';
 import { WelcomePageComponent } from './welcome-page/welcome-page.component';
+import { UsersComponent } from './users/users.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +31,8 @@ import { WelcomePageComponent } from './welcome-page/welcome-page.component';
     TaskComponent,
     TaskDialogComponent,
     TasksComponent,
-    WelcomePageComponent
+    WelcomePageComponent,
+    UsersComponent
   ],
   imports: [
     BrowserModule,
@@ -40,6 +44,8 @@ import { WelcomePageComponent } from './welcome-page/welcome-page.component';
     MatInputModule,
     MatDialogModule,
     MatIconModule,
+    MatListModule,
+    MatGridListModule,
     CronEditorModule
   ],
   providers: [],

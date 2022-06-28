@@ -2,5 +2,11 @@
 <span *ngIf="isLoggedIn">
     <button mat-raised-button routerLink="/tasks">Tasks</button>
     <button mat-raised-button (click)="openNewTaskDialog()">Add new task</button>
-    <button mat-raised-button *ngIf="isAdmin">Users</button>
+    <button
+        *ngIf="isAdmin"
+        routerLink="/users"
+        mat-raised-button
+    >
+        Users
+    </button>
 </span>
