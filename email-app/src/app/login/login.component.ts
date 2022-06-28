@@ -47,7 +47,6 @@ export class LoginComponent{
       .subscribe(
         () => {
           this.marDialogRef.close();
-          this.getUsers();
         },
         (serverError: HttpErrorResponse) => {
           this.serverErrorResponse = serverError.error as string;
@@ -55,9 +54,9 @@ export class LoginComponent{
       );
   };
 
-  public getUsers(): void {
-    this.userService
-      .getUsers()
-      .subscribe(users => console.log(users));
-  }
+  // public getUsers(): void {
+  //   this.userService
+  //     .getUsers()
+  //     .subscribe(users => console.log(users));
+  // }
 }

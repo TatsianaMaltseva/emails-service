@@ -16,6 +16,8 @@ import { LoginComponent } from './login/login.component';
 import { LoginDialogComponent } from './login-dialog/login-dialog.component';
 import { TaskComponent } from './task/task.component';
 import { TaskDialogComponent } from './task-dialog/task-dialog.component';
+import { TasksComponent } from './tasks/tasks.component';
+import { WelcomePageComponent } from './welcome-page/welcome-page.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +26,9 @@ import { TaskDialogComponent } from './task-dialog/task-dialog.component';
     LoginComponent,
     LoginDialogComponent,
     TaskComponent,
-    TaskDialogComponent
+    TaskDialogComponent,
+    TasksComponent,
+    WelcomePageComponent
   ],
   imports: [
     BrowserModule,

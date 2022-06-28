@@ -18,7 +18,11 @@ export interface Task {
 })
 export class TaskService {
   private readonly apiUrl: string;
-  public readonly tasks: Task[] = [];
+  private _tasks: Task[] = [];
+
+  public get tasks(): Task[] {
+    return this._tasks;
+  }
 
   public constructor(
     private readonly http: HttpClient,
@@ -36,8 +40,15 @@ export class TaskService {
       )
       .pipe(
         tap((task: Task) => {
-          this.tasks.push(task);
+          this._tasks.push(task);
         })
+      )
+  }
+
+  public getTasks(userId: number): Observable<Task[]> {
+    return this.http
+      .get<Task[]>(
+        `${this.apiUrl}users/${userId}/tasks`
       )
   }
 }
