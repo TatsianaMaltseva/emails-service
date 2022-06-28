@@ -11,9 +11,8 @@ namespace email_app_api.Controllers
     {
         private readonly UserService userService;
 
-        public UsersController(
-            UserService userService
-        ){
+        public UsersController(UserService userService)
+        {
             this.userService = userService;
         }
 

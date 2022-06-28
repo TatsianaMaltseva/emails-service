@@ -16,7 +16,7 @@ export class NavbarComponent {
   }
 
   public get isLoggedIn(): boolean {
-    return true;// this.userService.isLoggedIn
+    return this.userService.isLoggedIn
   }
 
   public constructor(

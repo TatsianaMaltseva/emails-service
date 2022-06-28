@@ -31,6 +31,7 @@ namespace email_app_api
             services.AddSingleton(mapper);
 
             services.AddSingleton<UserService>();
+            services.AddSingleton<TaskService>();
 
             services.Configure<EmailAppDbOptions>(Configuration.GetSection("EmailAppDb"));
 
@@ -56,7 +57,7 @@ namespace email_app_api
             app.UseRouting();
             app.UseCors();
 
-            //app.UseAuthorization();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

@@ -16,6 +16,9 @@
             cdkAutosizeMaxRows="35"
         ></textarea>
     </mat-form-field>
+    <mat-error *ngIf="serverErrorResponse">
+        {{ serverErrorResponse }}
+    </mat-error>
     <cron-editor formControlName="cron" [options]="cronOptions"></cron-editor>
     <button mat-button (click)="createTask()">Create</button>
     <button mat-button mat-dialog-close>Close</button>

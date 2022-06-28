@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
@@ -13,6 +14,7 @@ import { TaskDialogComponent } from '../task-dialog/task-dialog.component';
 })
 export class TaskComponent implements OnInit {
   public changeTaskForm: FormGroup;
+  public serverErrorResponse: string = '';
 
   public cronOptions: CronOptions = {
     defaultTime: "00:00:00",
@@ -55,7 +57,11 @@ export class TaskComponent implements OnInit {
   public createTask(): void {
     this.taskService
       .createTask(this.changeTaskForm.value)
-      .subscribe();
+      .subscribe(
+        () => this.closeDialog(),
+        (serverError: HttpErrorResponse) => {
+          this.serverErrorResponse = serverError.error as string;
+        });
   }
 
   private closeDialog(): void {
