@@ -13,13 +13,17 @@ import { AppComponent } from './app.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { LoginComponent } from './login/login.component';
 import { LoginDialogComponent } from './login-dialog/login-dialog.component';
+import { TaskComponent } from './task/task.component';
+import { TaskDialogComponent } from './task-dialog/task-dialog.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavbarComponent,
     LoginComponent,
-    LoginDialogComponent
+    LoginDialogComponent,
+    TaskComponent,
+    TaskDialogComponent
   ],
   imports: [
     BrowserModule,
