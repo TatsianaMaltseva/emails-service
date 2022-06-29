@@ -1,11 +1,17 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { CronOptions } from 'ngx-cron-editor';
 
 import { TaskService, TaskDialogState, Task } from 'src/services/task.service';
 import { TaskDialogComponent } from '../task-dialog/task-dialog.component';
+
+export enum Topic {
+  Weather = "Weather",
+  Languages = "Languages",
+  Stops = "Stops"
+}
 
 @Component({
   selector: 'app-task',
@@ -14,6 +20,7 @@ import { TaskDialogComponent } from '../task-dialog/task-dialog.component';
 })
 export class TaskComponent implements OnInit {
   public changeTaskForm: FormGroup;
+  public readonly topicOptions = [Topic.Weather, Topic.Languages, Topic.Stops];
   public serverErrorResponse: string = '';
   public isTaskBeingEdited: boolean = false;
   public cronOptions: CronOptions = {
@@ -45,7 +52,8 @@ export class TaskComponent implements OnInit {
         id: [''],
         name: ['', Validators.required],
         description: [''],
-        cron: ['0 0 1/1 * *']
+        cron: ['0 0 1/1 * *'],
+        topic: [null, Validators.required]
       }
     )
   }

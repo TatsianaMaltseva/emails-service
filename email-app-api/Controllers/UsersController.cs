@@ -2,7 +2,6 @@
 using email_app_api.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace email_app_api.Controllers
 {

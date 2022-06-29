@@ -19,6 +19,17 @@
     <mat-error *ngIf="serverErrorResponse">
         {{ serverErrorResponse }}
     </mat-error>
+    <mat-form-field class="input-field">
+        <label>Topic</label>
+        <mat-select matInput formControlName="topic">
+            <mat-option *ngFor="let topic of topicOptions" [value]="topic">
+                {{ topic }}
+            </mat-option>
+        </mat-select>
+        <mat-error>
+            Topic is required
+        </mat-error>
+    </mat-form-field>
     <cron-editor formControlName="cron" [options]="cronOptions"></cron-editor>
     <button
         *ngIf="!isTaskBeingEdited"

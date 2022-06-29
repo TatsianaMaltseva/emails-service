@@ -2,7 +2,7 @@
     <span *ngFor="let task of tasks; last as last">
         <mat-list-item class="list-element">
             <span class="inlineLeft">
-                {{ task.name }} {{ task.description }}
+                {{ task.name }} {{ task.description }} {{ task.topic }}
             </span>
             <span class="inlineRight">
                 <button mat-raised-button (click)="openEditTaskDialog(task)">

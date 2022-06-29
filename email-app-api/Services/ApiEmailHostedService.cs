@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Cronos;
+using static email_app_api.Services.ApiEmailService;
 
 namespace email_app_api.Services
 {
@@ -45,7 +46,7 @@ namespace email_app_api.Services
                 if ((nextLocalTime - localTimeNow) < TimeSpan.FromMinutes(1))
                 {
                     Models.UserEntity user = userService.GetUser(task.UserId);
-                    await apiEmailService.SendEmailAsync(user.Email, ApiEmailService.Topics.Weather);
+                    await apiEmailService.SendEmailAsync(user.Email, (Topic)Enum.Parse(typeof(Topic), task.Topic));
                 }
             }
         }

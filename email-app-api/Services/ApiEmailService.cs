@@ -4,12 +4,15 @@ using System.Threading.Tasks;
 using MimeKit;
 using MailKit.Net.Smtp;
 using System.Net.Http;
+using System.Text.Json.Serialization;
+using Newtonsoft.Json.Converters;
 
 namespace email_app_api.Services
 {
     public class ApiEmailService
     {
-        public enum Topics
+        [JsonConverter(typeof(StringEnumConverter))]
+        public enum Topic
         {
             Weather,
             Languages,
@@ -48,20 +51,20 @@ namespace email_app_api.Services
 	        },
         };
 
-        public async Task SendEmailAsync(string email, Topics api)
+        public async Task SendEmailAsync(string email, Topic api)
         {
             HttpRequestMessage request = api switch
             {
-                Topics.Weather => CreateWeatherRequest(),
-                Topics.Languages => CreateLanguagesRequest(),
-                Topics.Stops =>  CreateStopsRequest(),
+                Topic.Weather => CreateWeatherRequest(),
+                Topic.Languages => CreateLanguagesRequest(),
+                Topic.Stops =>  CreateStopsRequest(),
                 _ => null
             };
-            var client = new HttpClient();
+            HttpClient client = new HttpClient();
             using (var response = await client.SendAsync(request))
             {
                 response.EnsureSuccessStatusCode();
-                var data = response.Content.ReadAsStream();
+                Stream data = response.Content.ReadAsStream();
 
                 await SendEmailAsync(email, "", "Hey, have a good day!", data);
             }
@@ -69,17 +72,17 @@ namespace email_app_api.Services
 
         private async Task SendEmailAsync(string email, string subject, string message, Stream file)
         {
-            var emailMessage = new MimeMessage();
+            MimeMessage emailMessage = new MimeMessage();
             emailMessage.From.Add(new MailboxAddress("Email service", "tanjamaltzevatanja@yandex.ru"));
             emailMessage.To.Add(new MailboxAddress("", email));
             emailMessage.Subject = subject;
 
-            var body = new TextPart(MimeKit.Text.TextFormat.Plain)
+            TextPart body = new TextPart(MimeKit.Text.TextFormat.Plain)
             {
                 Text = message
             };
 
-            var attachment = new MimePart("text/csv", "csv")
+            MimePart attachment = new MimePart("text/csv", "csv")
             {
                 Content = new MimeContent(file),
                 ContentDisposition = new ContentDisposition(ContentDisposition.Attachment),
@@ -87,7 +90,7 @@ namespace email_app_api.Services
                 FileName = "requested data.csv"
             };
 
-            var multipart = new Multipart("mixed");
+            Multipart multipart = new Multipart("mixed");
             multipart.Add(body);
             multipart.Add(attachment);
             emailMessage.Body = multipart;

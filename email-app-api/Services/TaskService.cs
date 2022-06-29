@@ -20,8 +20,8 @@ namespace email_app_api.Services
 
         public Task AddTask(int userId, Task task)
         {
-            string sqlExpression = $"INSERT INTO Tasks (UserId, Name, Description, Cron) " +
-                $"VALUES(\"{userId}\", \"{task.Name}\", \"{task.Description}\", \"{task.Cron}\");" +
+            string sqlExpression = $"INSERT INTO Tasks (UserId, Name, Description, Cron, Topic) " +
+                $"VALUES(\"{userId}\", \"{task.Name}\", \"{task.Description}\", \"{task.Cron}\", \"{task.Topic}\");" +
                 $"SELECT MAX(Id) FROM Tasks";
             using var connection = new SqliteConnection(connectionString);
             connection.Open();
@@ -59,7 +59,7 @@ namespace email_app_api.Services
         public Task EditTask(int taskId, Task task)
         {
             string sqlExpression = $"UPDATE Tasks " +
-                $"SET Name = \"{task.Name}\", Description = \"{task.Description}\", Cron = \"{task.Cron}\" " +
+                $"SET Name = \"{task.Name}\", Description = \"{task.Description}\", Cron = \"{task.Cron}\", Topic = \"{task.Topic}\" " +
                 $"WHERE Id = \"{taskId}\"";
             using var connection = new SqliteConnection(connectionString);
             connection.Open();
@@ -111,7 +111,8 @@ namespace email_app_api.Services
                 UserId = reader.GetInt32(1),
                 Name = reader.GetString(2),
                 Description = reader.GetString(3),
-                Cron = reader.GetString(4)
+                Cron = reader.GetString(4),
+                Topic = (ApiEmailService.Topic)reader.GetInt32(5)
             };
         }
     }

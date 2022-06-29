@@ -5,12 +5,14 @@ import { tap } from 'rxjs/operators';
 
 import { environment } from 'src/environments/environment';
 import { UserService } from './user.service';
+import { Topic } from 'src/app/task/task.component';
 
 export interface Task {
   id: number;
   name: string;
   description: string;
   cron: string;
+  topic: Topic
 }
 
 export enum TaskDialogState {
