@@ -3,8 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { CronOptions } from 'ngx-cron-editor';
-import { TaskService } from 'src/services/task.service';
 
+import { TaskService, TaskDialogState, Task } from 'src/services/task.service';
 import { TaskDialogComponent } from '../task-dialog/task-dialog.component';
 
 @Component({
@@ -15,7 +15,7 @@ import { TaskDialogComponent } from '../task-dialog/task-dialog.component';
 export class TaskComponent implements OnInit {
   public changeTaskForm: FormGroup;
   public serverErrorResponse: string = '';
-
+  public isTaskBeingEdited: boolean = false;
   public cronOptions: CronOptions = {
     defaultTime: "00:00:00",
 
@@ -51,7 +51,10 @@ export class TaskComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    
+    if (this.taskService.taskDialogState === TaskDialogState.Edit) {
+      this.isTaskBeingEdited = true;
+      this.changeTaskForm.patchValue(this.taskService.currentlyOpenedTask!);
+    }
   }
 
   public createTask(): void {
@@ -62,6 +65,17 @@ export class TaskComponent implements OnInit {
         (serverError: HttpErrorResponse) => {
           this.serverErrorResponse = serverError.error as string;
         });
+  }
+
+  public editTask(): void {
+    this.taskService
+      .editTask(this.changeTaskForm.value)
+      .subscribe(
+        () => this.closeDialog(),
+        (serverError: HttpErrorResponse) => {
+          this.serverErrorResponse = serverError.error as string
+        }
+      )
   }
 
   private closeDialog(): void {

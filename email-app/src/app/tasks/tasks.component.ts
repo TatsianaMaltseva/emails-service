@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { TaskService, Task } from 'src/services/task.service';
 import { UserService } from 'src/services/user.service';
+import { TaskComponent } from '../task/task.component';
 
 @Component({
   selector: 'app-tasks',
@@ -14,7 +16,8 @@ export class TasksComponent implements OnInit {
 
   public constructor(
     private readonly taskService: TaskService,
-    private readonly userService: UserService
+    private readonly userService: UserService,
+    private readonly matDialog: MatDialog
   ) {
   }
 
@@ -29,7 +32,13 @@ export class TasksComponent implements OnInit {
   }
 
   public openEditTaskDialog(task: Task): void {
-
+    this.taskService.setCurrentlyOpenedTaskId(task.id);
+    this.matDialog.open(
+      TaskComponent,
+      {
+        width: '1500px'
+      }
+    )
   }
 
   private getTasks(): void {

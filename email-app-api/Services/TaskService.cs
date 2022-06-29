@@ -56,6 +56,22 @@ namespace email_app_api.Services
             return tasks;
         }
 
+        public Task EditTask(int taskId, Task task)
+        {
+            string sqlExpression = $"UPDATE Tasks " +
+                $"SET Name = \"{task.Name}\", Description = \"{task.Description}\", Cron = \"{task.Cron}\" " +
+                $"WHERE Id = \"{taskId}\"";
+            using var connection = new SqliteConnection(connectionString);
+            connection.Open();
+            SqliteCommand command = new SqliteCommand(sqlExpression, connection);
+            bool ifWasUpdated = command.ExecuteNonQuery() != 0;
+            if (ifWasUpdated)
+            {
+                return task;
+            }
+            return null;
+        }
+
         public List<Task> GetTasks()
         {
             string sqlExpression = $"SELECT * FROM Tasks";

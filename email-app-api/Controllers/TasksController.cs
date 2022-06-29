@@ -24,6 +24,16 @@ namespace email_app_api.Controllers
                 : BadRequest("Task data is not valid");
         }
 
+        [HttpPut]
+        [Route("users/{userId}/[controller]/{taskId}")]
+        public IActionResult EditTask([FromRoute] int taskId, [FromBody] Task task)
+        {
+            Task editedTask = taskService.EditTask(taskId, task);
+            return editedTask != null
+                ? Ok(editedTask)
+                : BadRequest("Task data is not valid");
+        }
+
         [HttpGet]
         [Route("users/{userId}/[controller]")]
         public List<Task> GetTasks([FromRoute] int userId)

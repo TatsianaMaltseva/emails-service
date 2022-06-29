@@ -20,6 +20,19 @@
         {{ serverErrorResponse }}
     </mat-error>
     <cron-editor formControlName="cron" [options]="cronOptions"></cron-editor>
-    <button mat-button (click)="createTask()">Create</button>
+    <button
+        *ngIf="!isTaskBeingEdited"
+        mat-button
+        (click)="createTask()"
+    >
+        Create
+    </button>
+    <button
+        *ngIf="isTaskBeingEdited"
+        mat-button
+        (click)="editTask()"
+    >
+        Edit
+    </button>
     <button mat-button mat-dialog-close>Close</button>
 </form>

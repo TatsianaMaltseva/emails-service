@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { TaskService } from 'src/services/task.service';
 
 import { UserService } from 'src/services/user.service';
 import { LoginComponent } from '../login/login.component';
@@ -21,7 +22,8 @@ export class NavbarComponent {
 
   public constructor(
     private readonly matDialog: MatDialog,
-    private readonly userService: UserService
+    private readonly userService: UserService,
+    private readonly taskService: TaskService
   ) {
   }
 
@@ -35,6 +37,7 @@ export class NavbarComponent {
   };
 
   public openNewTaskDialog(): void {
+    this.taskService.setCurrentlyOpenedTaskId(null);
     this.matDialog.open(
       TaskComponent,
       {
