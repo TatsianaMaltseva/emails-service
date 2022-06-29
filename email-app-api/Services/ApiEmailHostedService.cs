@@ -4,22 +4,23 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Cronos;
 
 namespace email_app_api.Services
 {
-    public class TimedHostedService : IHostedService, IDisposable
+    public class ApiEmailHostedService : IHostedService, IDisposable
     {
         private Timer _timer = null!;
         private readonly IServiceScopeFactory _scopeFactory;
 
-        public TimedHostedService(IServiceScopeFactory scopeFactory)
+        public ApiEmailHostedService(IServiceScopeFactory scopeFactory)
         {
             _scopeFactory = scopeFactory;
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            _timer = new Timer(DoWork, null, TimeSpan.Zero, TimeSpan.FromSeconds(10));
+            _timer = new Timer(DoWork, null, TimeSpan.Zero, TimeSpan.FromMinutes(1));
 
             return Task.CompletedTask;
         }
@@ -29,8 +30,24 @@ namespace email_app_api.Services
             using var scope = _scopeFactory.CreateScope();
             ApiEmailService apiEmailService = scope.ServiceProvider.GetRequiredService<ApiEmailService>();
             TaskService taskService = scope.ServiceProvider.GetRequiredService<TaskService>();
+            UserService userService = scope.ServiceProvider.GetRequiredService<UserService>();
             List<Models.Task> tasks = taskService.GetTasks();
-            await apiEmailService.SendEmailAsync("tanjamaltzevatanja@gmail.com", ApiEmailService.Topics.Weather);
+
+            foreach(Models.Task task in tasks)
+            {
+                string cron = task.Cron;
+                CronExpression expression = CronExpression.Parse(cron);
+                DateTimeOffset? next = expression.GetNextOccurrence(DateTimeOffset.Now, TimeZoneInfo.Local);
+
+                DateTime localTimeNow = DateTime.Now;
+                DateTime? nextLocalTime = next?.DateTime;
+
+                if ((nextLocalTime - localTimeNow) < TimeSpan.FromMinutes(1))
+                {
+                    Models.UserEntity user = userService.GetUser(task.UserId);
+                    await apiEmailService.SendEmailAsync(user.Email, ApiEmailService.Topics.Weather);
+                }
+            }
         }
 
         public Task StopAsync(CancellationToken cancellationToken)

@@ -38,6 +38,23 @@ namespace email_app_api.Services
             return mapper.Map<List<UserEntity>, List<User>>(userEntities);
         }
 
+        public UserEntity GetUser(int userId)
+        {
+            string sqlExpression = $"SELECT * FROM Users WHERE Id = \"{userId}\"";
+            using var connection = new SqliteConnection(connectionString);
+            connection.Open();
+            SqliteCommand command = new SqliteCommand(sqlExpression, connection);
+            using (SqliteDataReader reader = command.ExecuteReader())
+            {
+                if (reader.HasRows)
+                {
+                    reader.Read();
+                    return GetUserFromReader(reader);
+                }
+            }
+            return null;
+        }
+
         private List<UserEntity> GetUsers()
         {
             string sqlExpression = $"SELECT * FROM Users";
@@ -62,23 +79,6 @@ namespace email_app_api.Services
         private UserEntity GetUser(string email, string password)
         {
             string sqlExpression = $"SELECT * FROM Users WHERE Email = \"{email}\" AND Password = \"{password}\"";
-            using var connection = new SqliteConnection(connectionString);
-            connection.Open();
-            SqliteCommand command = new SqliteCommand(sqlExpression, connection);
-            using (SqliteDataReader reader = command.ExecuteReader())
-            {
-                if (reader.HasRows)
-                {
-                    reader.Read();
-                    return GetUserFromReader(reader);
-                }
-            }
-            return null;
-        }
-
-        private UserEntity GetUser(int currerntUserId)
-        {
-            string sqlExpression = $"SELECT * FROM Users WHERE Id = \"{currerntUserId}\"";
             using var connection = new SqliteConnection(connectionString);
             connection.Open();
             SqliteCommand command = new SqliteCommand(sqlExpression, connection);

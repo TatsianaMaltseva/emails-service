@@ -33,7 +33,7 @@ namespace email_app_api
             services.AddSingleton<UserService>();
             services.AddSingleton<TaskService>();
             services.AddSingleton<ApiEmailService>();
-            services.AddHostedService<TimedHostedService>();
+            services.AddHostedService<ApiEmailHostedService>();
 
             services.Configure<EmailAppDbOptions>(Configuration.GetSection("EmailAppDb"));
 
