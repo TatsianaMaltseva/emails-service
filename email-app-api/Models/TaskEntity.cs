@@ -1,4 +1,5 @@
-﻿using static email_app_api.Services.ApiEmailService;
+﻿using System;
+using static email_app_api.Services.ApiEmailService;
 
 namespace email_app_api.Models
 {
@@ -15,5 +16,7 @@ namespace email_app_api.Models
         public string Cron { get; set; }
 
         public Topic Topic { get; set; }
+
+        public DateTime StartDate { get; set; }
     }
 }

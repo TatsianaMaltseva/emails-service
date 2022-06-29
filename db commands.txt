@@ -12,6 +12,7 @@ CREATE TABLE [Tasks] (
     [Description] NVARCHAR (500) NULL,
     [Cron] NVARCHAR (30) NOT NULL,
     [Topic] INTEGER NOT NULL,
+    [StartDate] DATE NOT NULL,
     FOREIGN KEY ([UserId]) REFERENCES [Users]([Id]) ON DELETE CASCADE
 );
 

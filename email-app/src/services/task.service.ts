@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import * as dayjs from 'dayjs'
 
 import { environment } from 'src/environments/environment';
 import { UserService } from './user.service';
@@ -12,7 +13,8 @@ export interface Task {
   name: string;
   description: string;
   cron: string;
-  topic: Topic
+  topic: Topic;
+  startDate: string;
 }
 
 export enum TaskDialogState {
@@ -57,6 +59,7 @@ export class TaskService {
 
   public createTask(task: Task): Observable<Task> {
     const { id, ...taskToAdd } = task;
+    taskToAdd.startDate = this.formatDate(taskToAdd.startDate);
     return this.http
       .post<Task>(
         `${this.apiUrl}users/${this.userService.id}/tasks`,
@@ -71,6 +74,7 @@ export class TaskService {
 
   public editTask(task: Task): Observable<Task> {
     const { id, ...taskToEdit } = task;
+    taskToEdit.startDate = this.formatDate(taskToEdit.startDate);
     return this.http
       .put<Task>(
         `${this.apiUrl}users/${this.userService.id}/tasks/${id}`,
@@ -104,5 +108,10 @@ export class TaskService {
       .pipe(
         tap(() => this._tasks = this._tasks.filter(task => task.id !== taskId))
       );
+  }
+
+  private formatDate(date: string): string {
+    const format = 'YYYY-MM-DD';
+    return dayjs(new Date(date)).format(format);
   }
 }

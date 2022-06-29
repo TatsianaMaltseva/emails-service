@@ -10,6 +10,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatSelectModule } from '@angular/material/select';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 import { CronEditorModule } from 'ngx-cron-editor';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -48,6 +50,8 @@ import { UsersComponent } from './users/users.component';
     MatListModule,
     MatGridListModule,
     MatSelectModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
     CronEditorModule
   ],
   providers: [],

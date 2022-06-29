@@ -30,10 +30,25 @@
             Topic is required
         </mat-error>
     </mat-form-field>
+    <mat-form-field appearance="outline" class="input-field">
+        <label>Start send messages since</label>
+        <input
+            matInput
+            formControlName="startDate"
+            [min]="minDate"
+            [matDatepicker]="releasedAtPicker"
+        >
+        <mat-error>
+            Data is required
+        </mat-error>
+        <mat-datepicker-toggle matSuffix [for]="releasedAtPicker"></mat-datepicker-toggle>
+        <mat-datepicker #releasedAtPicker></mat-datepicker>  
+    </mat-form-field>
     <cron-editor formControlName="cron" [options]="cronOptions"></cron-editor>
     <button
         *ngIf="!isTaskBeingEdited"
         mat-button
+        [disabled]="changeTaskForm.invalid"
         (click)="createTask()"
     >
         Create
@@ -41,6 +56,7 @@
     <button
         *ngIf="isTaskBeingEdited"
         mat-button
+        [disabled]="changeTaskForm.invalid"
         (click)="editTask()"
     >
         Edit
