@@ -35,9 +35,30 @@ namespace email_app_api.Services
             return null;
         }
 
-        public List<Task> GetTasks(int userId)
+        public List<Task> GetTasksForUser(int userId)
         {
             string sqlExpression = $"SELECT * FROM Tasks WHERE UserId = \"{userId}\"";
+            using var connection = new SqliteConnection(connectionString);
+            List<Task> tasks = new List<Task>();
+            connection.Open();
+            SqliteCommand command = new SqliteCommand(sqlExpression, connection);
+            using (SqliteDataReader reader = command.ExecuteReader())
+            {
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        TaskEntity task = GetTaskFromReader(reader);
+                        tasks.Add(mapper.Map<Task>(task));
+                    }
+                }
+            }
+            return tasks;
+        }
+
+        public List<Task> GetTasks()
+        {
+            string sqlExpression = $"SELECT * FROM Tasks";
             using var connection = new SqliteConnection(connectionString);
             List<Task> tasks = new List<Task>();
             connection.Open();

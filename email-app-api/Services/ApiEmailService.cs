@@ -16,7 +16,7 @@ namespace email_app_api.Services
             Stops
         }
 
-        private static readonly HttpRequestMessage weatherRequest = new HttpRequestMessage
+        private HttpRequestMessage CreateWeatherRequest() => new HttpRequestMessage
         {
             Method = HttpMethod.Get,
             RequestUri = new Uri("https://weatherapi-com.p.rapidapi.com/forecast.json?q=London&days=3"),
@@ -27,7 +27,7 @@ namespace email_app_api.Services
             },
         };
 
-        private static readonly HttpRequestMessage languagesRequest = new HttpRequestMessage
+        private HttpRequestMessage CreateLanguagesRequest() => new HttpRequestMessage
         {
             RequestUri = new Uri("https://google-translate1.p.rapidapi.com/language/translate/v2/languages?target=en"),
 	        Headers =
@@ -37,7 +37,7 @@ namespace email_app_api.Services
 	        },
         };
 
-        private static readonly HttpRequestMessage stopsRequest = new HttpRequestMessage
+        private HttpRequestMessage CreateStopsRequest() => new HttpRequestMessage
         {
 	        Method = HttpMethod.Get,
 	        RequestUri = new Uri("https://transloc-api-1-2.p.rapidapi.com/stops.json?agencies=12%2C16&geo_area=35.80176%2C-78.64347%7C35.78061%2C-78.68218&callback=call"),
@@ -50,11 +50,11 @@ namespace email_app_api.Services
 
         public async Task SendEmailAsync(string email, Topics api)
         {
-            var request = api switch
+            HttpRequestMessage request = api switch
             {
-                Topics.Weather => weatherRequest,
-                Topics.Languages => languagesRequest,
-                Topics.Stops => stopsRequest,
+                Topics.Weather => CreateWeatherRequest(),
+                Topics.Languages => CreateLanguagesRequest(),
+                Topics.Stops =>  CreateStopsRequest(),
                 _ => null
             };
             var client = new HttpClient();
