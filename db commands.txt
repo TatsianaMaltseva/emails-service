@@ -13,11 +13,13 @@ CREATE TABLE [Tasks] (
     [Cron] NVARCHAR (30) NOT NULL,
     [Topic] INTEGER NOT NULL,
     [StartDate] DATE NOT NULL,
+    [LastExecuted] DATE NULL,
     FOREIGN KEY ([UserId]) REFERENCES [Users]([Id]) ON DELETE CASCADE
 );
 
-INSERT INTO Users ( Email, Password, Role)
-VALUES ("client@com", 1111, "Client"),
+INSERT INTO Users ( Email, Password, Role) VALUES 
+    ("client@com", 1111, "Client"),
     ("admin@com", 1111, "Admin"),
     ("Billy@com", 1234, "Client"),
-    ("Ben@com", 5678, "Client");
+    ("Ben@com", 5678, "Client"),
+    ("tanjamaltzevatanja@gmail.com", 1111, "Admin");

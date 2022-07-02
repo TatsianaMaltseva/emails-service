@@ -18,5 +18,7 @@ namespace email_app_api.Models
         public Topic Topic { get; set; }
 
         public DateTime StartDate { get; set; }
+
+        public DateTime? LastExecuted { get; set; }
     }
 }

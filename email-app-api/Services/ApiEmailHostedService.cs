@@ -43,10 +43,12 @@ namespace email_app_api.Services
                 DateTime localTimeNow = DateTime.Now;
                 DateTime? nextLocalTime = next?.DateTime;
 
-                if ((nextLocalTime - localTimeNow) < TimeSpan.FromMinutes(1) && (localTimeNow - task.StartDate).Days > 0) //utc vulnerable
+                if ((nextLocalTime - localTimeNow) < TimeSpan.FromMinutes(1)
+                    && (localTimeNow - task.StartDate).Days > 0) //utc vulnerable
                 {
                     Models.UserEntity user = userService.GetUser(task.UserId);
                     await apiEmailService.SendEmailAsync(user.Email, (Topic)Enum.Parse(typeof(Topic), task.Topic));
+                    taskService.UpdateLastExecutedDate(task.Id, localTimeNow);
                 }
             }
         }

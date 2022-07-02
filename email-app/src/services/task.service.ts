@@ -15,6 +15,7 @@ export interface Task {
   cron: string;
   topic: Topic;
   startDate: string;
+  lastExecuted: string;
 }
 
 export enum TaskDialogState {
@@ -29,6 +30,8 @@ export class TaskService {
   private readonly apiUrl: string;
   private _tasks: Task[] = [];
   private _currentlyOpenedTaskId: number | null = null;
+  private readonly dateFormat = 'YYYY-MM-DD';
+  private readonly dateTimeFormat = 'MMMM D, YYYY h:mm A';
 
   public get tasks(): Task[] {
     return this._tasks;
@@ -58,8 +61,8 @@ export class TaskService {
   }
 
   public createTask(task: Task): Observable<Task> {
-    const { id, ...taskToAdd } = task;
-    taskToAdd.startDate = this.formatDate(taskToAdd.startDate);
+    const { id, lastExecuted, ...taskToAdd } = task;
+    taskToAdd.startDate = this.formatDate(taskToAdd.startDate, this.dateFormat);
     return this.http
       .post<Task>(
         `${this.apiUrl}users/${this.userService.id}/tasks`,
@@ -73,8 +76,8 @@ export class TaskService {
   }
 
   public editTask(task: Task): Observable<Task> {
-    const { id, ...taskToEdit } = task;
-    taskToEdit.startDate = this.formatDate(taskToEdit.startDate);
+    const { id, lastExecuted, ...taskToEdit } = task;
+    taskToEdit.startDate = this.formatDate(taskToEdit.startDate, this.dateFormat);
     return this.http
       .put<Task>(
         `${this.apiUrl}users/${this.userService.id}/tasks/${id}`,
@@ -94,9 +97,12 @@ export class TaskService {
         `${this.apiUrl}users/${userId}/tasks`
       )
       .pipe(
-        tap((tasks: Task[]) =>
-          this._tasks = tasks
-        )
+        tap((tasks: Task[]) => {
+          tasks.forEach(task => 
+            task.lastExecuted = this.formatDate(task.lastExecuted, this.dateTimeFormat)
+          );
+          this._tasks = tasks; 
+        })
       )
   }
 
@@ -110,8 +116,6 @@ export class TaskService {
       );
   }
 
-  private formatDate(date: string): string {
-    const format = 'YYYY-MM-DD';
-    return dayjs(new Date(date)).format(format);
-  }
+  private formatDate = (date: string, format: string): string => 
+    dayjs(new Date(date)).format(format);
 }

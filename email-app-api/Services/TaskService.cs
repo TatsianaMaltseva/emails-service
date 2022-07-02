@@ -59,7 +59,11 @@ namespace email_app_api.Services
         public Task EditTask(int taskId, Task task)
         {
             string sqlExpression = $"UPDATE Tasks " +
-                $"SET Name = \"{task.Name}\", Description = \"{task.Description}\", Cron = \"{task.Cron}\", Topic = \"{task.Topic}\", StartDate = \"{task.StartDate}\" " +
+                $"SET Name = \"{task.Name}\", " +
+                $"Description = \"{task.Description}\", " +
+                $"Cron = \"{task.Cron}\", " +
+                $"Topic = \"{task.Topic}\", " +
+                $"StartDate = \"{task.StartDate}\" " +
                 $"WHERE Id = \"{taskId}\"";
             using var connection = new SqliteConnection(connectionString);
             connection.Open();
@@ -70,6 +74,17 @@ namespace email_app_api.Services
                 return task;
             }
             return null;
+        }
+
+        public void UpdateLastExecutedDate(int taskId, DateTime newDateTime)
+        {
+            string sqlExpression = $"UPDATE Tasks " +
+                $"SET LastExecuted = \"{newDateTime}\" " +
+                $"WHERE Id = \"{taskId}\"";
+            using var connection = new SqliteConnection(connectionString);
+            connection.Open();
+            SqliteCommand command = new SqliteCommand(sqlExpression, connection);
+            command.ExecuteNonQuery();
         }
 
         public List<Task> GetTasks()
@@ -113,7 +128,8 @@ namespace email_app_api.Services
                 Description = reader.GetString(3),
                 Cron = reader.GetString(4),
                 Topic = (ApiEmailService.Topic)reader.GetInt32(5),
-                StartDate = reader.GetDateTime(6)
+                StartDate = reader.GetDateTime(6),
+                LastExecuted = !reader.IsDBNull(7) ? reader.GetDateTime(7) : null
             };
         }
     }

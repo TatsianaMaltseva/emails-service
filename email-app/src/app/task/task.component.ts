@@ -53,9 +53,10 @@ export class TaskComponent implements OnInit {
         id: [''],
         name: ['', Validators.required],
         description: [''],
-        cron: ['0 0 1/1 * *'],
+        cron: ['* * * * *'],
         topic: [null, Validators.required],
-        startDate: [this.today, Validators.required]
+        startDate: [null, Validators.required],
+        lastExecuted: [null]
       }
     )
   }
