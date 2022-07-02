@@ -97,7 +97,7 @@ namespace email_app_api.Services
 
             using (var client = new SmtpClient())
             {
-                await client.ConnectAsync("smtp.yandex.ru", 25, false);
+                await client.ConnectAsync("smtp.yandex.ru", 465, MailKit.Security.SecureSocketOptions.SslOnConnect);
                 await client.AuthenticateAsync("tanjamaltzevatanja", "skjdivnskjvb");
                 await client.SendAsync(emailMessage);
                 await client.DisconnectAsync(true);

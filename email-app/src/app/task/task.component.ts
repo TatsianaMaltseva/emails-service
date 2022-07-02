@@ -23,7 +23,7 @@ export class TaskComponent implements OnInit {
   public readonly topicOptions = [Topic.Weather, Topic.Languages, Topic.Stops];
   public serverErrorResponse: string = '';
   public isTaskBeingEdited: boolean = false;
-  public minDate = new Date();
+  public today = new Date();
   public cronOptions: CronOptions = {
     defaultTime: "00:00:00",
 
@@ -55,7 +55,7 @@ export class TaskComponent implements OnInit {
         description: [''],
         cron: ['0 0 1/1 * *'],
         topic: [null, Validators.required],
-        startDate: [this.minDate, Validators.required]
+        startDate: [this.today, Validators.required]
       }
     )
   }
