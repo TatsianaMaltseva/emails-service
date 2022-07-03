@@ -17,9 +17,20 @@ CREATE TABLE [Tasks] (
     FOREIGN KEY ([UserId]) REFERENCES [Users]([Id]) ON DELETE CASCADE
 );
 
+CREATE TABLE [HttpRequestMessageData] (
+    [Topic] NVARCHAR (30) NOT NULL,
+    [RequestUrl] NVARCHAR (150) NOT NULL,
+    [Host] NVARCHAR (100) NOT NULL
+);
+
 INSERT INTO Users ( Email, Password, Role) VALUES 
     ("client@com", 1111, "Client"),
     ("admin@com", 1111, "Admin"),
     ("Billy@com", 1234, "Client"),
     ("Ben@com", 5678, "Client"),
     ("tanjamaltzevatanja@gmail.com", 1111, "Admin");
+
+INSERT INTO [HttpRequestMessageData] (Topic, RequestUrl, Host)
+    VALUES ("Weather", "https://weatherapi-com.p.rapidapi.com/forecast.json?q={0}&days=1", "weatherapi-com.p.rapidapi.com"),
+    ("Sport", "https://football98.p.rapidapi.com/{0}/fixtures", "football98.p.rapidapi.com"),
+    ("Stops", "https://transloc-api-1-2.p.rapidapi.com/stops.json?agencies=12%2C16&geo_area=35.80176%2C-78.64347%7C35.78061%2C-78.68218&callback=call", "transloc-api-1-2.p.rapidapi.com");

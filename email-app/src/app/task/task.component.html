@@ -30,6 +30,17 @@
             Topic is required
         </mat-error>
     </mat-form-field>
+    <mat-form-field *ngIf="options !== []" class="input-field">
+        <label>Options</label>
+        <mat-select matInput formControlName="option">
+            <mat-option *ngFor="let option of options" [value]="option">
+                {{ option }}
+            </mat-option>
+        </mat-select>
+        <mat-error>
+            Option is required
+        </mat-error>
+    </mat-form-field>
     <mat-form-field appearance="outline" class="input-field">
         <label>Start send messages since</label>
         <input

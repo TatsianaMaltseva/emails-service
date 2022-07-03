@@ -9,8 +9,19 @@ import { TaskDialogComponent } from '../task-dialog/task-dialog.component';
 
 export enum Topic {
   Weather = "Weather",
-  Languages = "Languages",
+  Sport = "Sport",
   Stops = "Stops"
+}
+
+export enum WeatherOptions {
+  London = "London",
+  Minsk = "Minsk",
+  Prague = "Prague"
+}
+
+export enum SportOptions {
+  PremierLeague = "PremierLeague",
+  EFL = "EFL"
 }
 
 @Component({
@@ -20,7 +31,10 @@ export enum Topic {
 })
 export class TaskComponent implements OnInit {
   public changeTaskForm: FormGroup;
-  public readonly topicOptions = [Topic.Weather, Topic.Languages, Topic.Stops];
+  public readonly topicOptions = [Topic.Weather, Topic.Sport, Topic.Stops];
+  public readonly sportOptions = [SportOptions.PremierLeague, SportOptions.EFL];
+  public readonly weatherOptions = [WeatherOptions.London, WeatherOptions.Minsk, WeatherOptions.Prague];
+
   public serverErrorResponse: string = '';
   public isTaskBeingEdited: boolean = false;
   public today = new Date();
@@ -42,6 +56,17 @@ export class TaskComponent implements OnInit {
 
     cronFlavor: "standart"
  };
+
+ public get options(): [] {
+  const currentTopic = this.changeTaskForm.value.topic;
+  if (currentTopic === Topic.Weather) {
+    return this.weatherOptions as []
+  }
+  if (currentTopic === Topic.Sport) {
+     return this.sportOptions as []
+  }
+   return [];
+ }
  
   public constructor(
     private readonly marDialogRef: MatDialogRef<TaskDialogComponent>,
@@ -56,7 +81,8 @@ export class TaskComponent implements OnInit {
         cron: ['* * * * *'],
         topic: [null, Validators.required],
         startDate: [null, Validators.required],
-        lastExecuted: [null]
+        lastExecuted: [null],
+        option: [null]
       }
     )
   }

@@ -16,6 +16,7 @@ export interface Task {
   topic: Topic;
   startDate: string;
   lastExecuted: string;
+  option: string;
 }
 
 export enum TaskDialogState {

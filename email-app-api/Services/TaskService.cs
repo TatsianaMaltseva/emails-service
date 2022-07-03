@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using email_app_api.Core;
 using email_app_api.Models;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Options;
@@ -20,8 +21,15 @@ namespace email_app_api.Services
 
         public Task AddTask(int userId, Task task)
         {
-            string sqlExpression = $"INSERT INTO Tasks (UserId, Name, Description, Cron, Topic, StartDate) " +
-                $"VALUES(\"{userId}\", \"{task.Name}\", \"{task.Description}\", \"{task.Cron}\", \"{task.Topic}\", \"{task.StartDate}\");" +
+            string sqlExpression = $"INSERT INTO Tasks " +
+                $"(UserId, Name, Description, Cron, Topic, StartDate, Option) " +
+                $"VALUES(\"{userId}\", " +
+                    $"\"{task.Name}\", " +
+                    $"\"{task.Description}\", " +
+                    $"\"{task.Cron}\", " +
+                    $"\"{task.Topic}\", " +
+                    $"\"{task.StartDate}\", " +
+                    $"\"{task.Option}\"); " +
                 $"SELECT MAX(Id) FROM Tasks";
             using var connection = new SqliteConnection(connectionString);
             connection.Open();
@@ -63,7 +71,8 @@ namespace email_app_api.Services
                 $"Description = \"{task.Description}\", " +
                 $"Cron = \"{task.Cron}\", " +
                 $"Topic = \"{task.Topic}\", " +
-                $"StartDate = \"{task.StartDate}\" " +
+                $"StartDate = \"{task.StartDate}\", " +
+                $"Option = \"{task.Option}\" " +
                 $"WHERE Id = \"{taskId}\"";
             using var connection = new SqliteConnection(connectionString);
             connection.Open();
@@ -127,9 +136,10 @@ namespace email_app_api.Services
                 Name = reader.GetString(2),
                 Description = reader.GetString(3),
                 Cron = reader.GetString(4),
-                Topic = (ApiEmailService.Topic)reader.GetInt32(5),
+                Topic = (Topic)reader.GetInt32(5),
                 StartDate = reader.GetDateTime(6),
-                LastExecuted = !reader.IsDBNull(7) ? reader.GetDateTime(7) : null
+                LastExecuted = !reader.IsDBNull(7) ? reader.GetDateTime(7) : null,
+                Option = !reader.IsDBNull(8) ? reader.GetString(8) : null
             };
         }
     }

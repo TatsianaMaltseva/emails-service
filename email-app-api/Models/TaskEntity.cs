@@ -1,5 +1,5 @@
-﻿using System;
-using static email_app_api.Services.ApiEmailService;
+﻿using email_app_api.Core;
+using System;
 
 namespace email_app_api.Models
 {
@@ -20,5 +20,7 @@ namespace email_app_api.Models
         public DateTime StartDate { get; set; }
 
         public DateTime? LastExecuted { get; set; }
+
+        public string Option { get; set; }
     }
 }

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Cronos;
-using static email_app_api.Services.ApiEmailService;
+using email_app_api.Core;
 
 namespace email_app_api.Services
 {
@@ -13,7 +13,7 @@ namespace email_app_api.Services
     {
         private Timer _timer = null!;
         private readonly IServiceScopeFactory _scopeFactory;
-
+         
         public ApiEmailHostedService(IServiceScopeFactory scopeFactory)
         {
             _scopeFactory = scopeFactory;
@@ -47,7 +47,7 @@ namespace email_app_api.Services
                     && (localTimeNow - task.StartDate).Days > 0) //utc vulnerable
                 {
                     Models.UserEntity user = userService.GetUser(task.UserId);
-                    await apiEmailService.SendEmailAsync(user.Email, (Topic)Enum.Parse(typeof(Topic), task.Topic));
+                    await apiEmailService.SendEmailAsync(user.Email, task);
                     taskService.UpdateLastExecutedDate(task.Id, localTimeNow);
                 }
             }

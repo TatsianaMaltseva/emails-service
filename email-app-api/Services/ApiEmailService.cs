@@ -4,69 +4,53 @@ using System.Threading.Tasks;
 using MimeKit;
 using MailKit.Net.Smtp;
 using System.Net.Http;
-using System.Text.Json.Serialization;
-using Newtonsoft.Json.Converters;
+using email_app_api.Core;
+using Microsoft.Extensions.Options;
+using Microsoft.Data.Sqlite;
 
 namespace email_app_api.Services
 {
     public class ApiEmailService
     {
-        [JsonConverter(typeof(StringEnumConverter))]
-        public enum Topic
+        private readonly string connectionString;
+
+        public ApiEmailService(IOptions<EmailAppDbOptions> dbOptions)
         {
-            Weather,
-            Languages,
-            Stops
+            connectionString = dbOptions.Value.ConnectionString;
         }
 
-        private HttpRequestMessage CreateWeatherRequest() => new HttpRequestMessage
+        public async Task SendEmailAsync(string email, Models.Task task)
         {
-            Method = HttpMethod.Get,
-            RequestUri = new Uri("https://weatherapi-com.p.rapidapi.com/forecast.json?q=London&days=3"),
-            Headers =
-            {
-                { "X-RapidAPI-Key", "82ae6d5081msh502b62fd786c6e5p138581jsn5887b17fe4a1" },
-                { "X-RapidAPI-Host", "weatherapi-com.p.rapidapi.com" },
-            },
-        };
-
-        private HttpRequestMessage CreateLanguagesRequest() => new HttpRequestMessage
-        {
-            RequestUri = new Uri("https://google-translate1.p.rapidapi.com/language/translate/v2/languages?target=en"),
-	        Headers =
-	        {
-		        { "X-RapidAPI-Key", "82ae6d5081msh502b62fd786c6e5p138581jsn5887b17fe4a1" },
-		        { "X-RapidAPI-Host", "google-translate1.p.rapidapi.com" },
-	        },
-        };
-
-        private HttpRequestMessage CreateStopsRequest() => new HttpRequestMessage
-        {
-	        Method = HttpMethod.Get,
-	        RequestUri = new Uri("https://transloc-api-1-2.p.rapidapi.com/stops.json?agencies=12%2C16&geo_area=35.80176%2C-78.64347%7C35.78061%2C-78.68218&callback=call"),
-	        Headers =
-	        {
-		        { "X-RapidAPI-Key", "82ae6d5081msh502b62fd786c6e5p138581jsn5887b17fe4a1" },
-		        { "X-RapidAPI-Host", "transloc-api-1-2.p.rapidapi.com" },
-	        },
-        };
-
-        public async Task SendEmailAsync(string email, Topic api)
-        {
-            HttpRequestMessage request = api switch
-            {
-                Topic.Weather => CreateWeatherRequest(),
-                Topic.Languages => CreateLanguagesRequest(),
-                Topic.Stops =>  CreateStopsRequest(),
-                _ => null
-            };
+            HttpRequestMessage request = new CustomHttpRequestMessage(
+                task,
+                GetApi((Topic)Enum.Parse(typeof(Topic), task.Topic, true))
+            );
             HttpClient client = new HttpClient();
-            using (var response = await client.SendAsync(request))
-            {
-                response.EnsureSuccessStatusCode();
-                Stream data = response.Content.ReadAsStream();
+            using var response = await client.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+            Stream data = response.Content.ReadAsStream();
+            await SendEmailAsync(email, "", "Hey, have a good day!", data);
+        }
 
-                await SendEmailAsync(email, "", "Hey, have a good day!", data);
+        private HttpRequestMessageData GetApi(Topic topic)
+        {
+            string sqlExpression = $"SELECT * FROM HttpRequestMessageData Where Topic = \"{topic}\"";
+            using var connection = new SqliteConnection(connectionString);
+            connection.Open();
+            SqliteCommand command = new SqliteCommand(sqlExpression, connection);
+            using (SqliteDataReader reader = command.ExecuteReader())
+            {
+                if (reader.HasRows)
+                {
+                    reader.Read();
+                    return new HttpRequestMessageData()
+                    {
+                        Topic = reader.GetString(0),
+                        RequestUrl = reader.GetString(1),
+                        Host = reader.GetString(2)
+                    };
+                }
+            return null;
             }
         }
 
