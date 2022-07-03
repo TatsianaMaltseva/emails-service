@@ -7,6 +7,8 @@ using System.Net.Http;
 using email_app_api.Core;
 using Microsoft.Extensions.Options;
 using Microsoft.Data.Sqlite;
+using Aspose.Cells;
+using Aspose.Cells.Utility;
 
 namespace email_app_api.Services
 {
@@ -25,11 +27,24 @@ namespace email_app_api.Services
                 task,
                 GetApi((Topic)Enum.Parse(typeof(Topic), task.Topic, true))
             );
+
             HttpClient client = new HttpClient();
             using var response = client.Send(request);
             response.EnsureSuccessStatusCode();
-            Stream data = response.Content.ReadAsStream();
-            SendEmail(email, "", "Hey, have a good day!", data);
+            MemoryStream convertedResponseStream = ConvertJsonToCsv(response.Content.ReadAsStream());
+            SendEmail(email, "", "Hey, have a good day!", convertedResponseStream);
+        }
+
+        private MemoryStream ConvertJsonToCsv(Stream responseStream)
+        {
+            var workbook = new Workbook();
+            var worksheet = workbook.Worksheets[0];
+            var layoutOptions = new JsonLayoutOptions();
+            layoutOptions.ArrayAsTable = true;
+            StreamReader reader = new StreamReader(responseStream);
+            string text = reader.ReadToEnd();
+            JsonUtility.ImportData(text, worksheet.Cells, 0, 0, layoutOptions);
+            return workbook.SaveToStream();
         }
 
         private HttpRequestMessageData GetApi(Topic topic)
