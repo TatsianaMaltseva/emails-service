@@ -5,12 +5,12 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Cronos;
-using email_app_api.Core;
 
 namespace email_app_api.Services
 {
     public class ApiEmailHostedService : IHostedService, IDisposable
     {
+        public static Semaphore semaphore = new Semaphore(4, 5);
         private Timer _timer = null!;
         private readonly IServiceScopeFactory _scopeFactory;
          
@@ -26,7 +26,7 @@ namespace email_app_api.Services
             return Task.CompletedTask;
         }
 
-        private async void DoWork(object state)
+        private void DoWork(object state)
         {
             using var scope = _scopeFactory.CreateScope();
             ApiEmailService apiEmailService = scope.ServiceProvider.GetRequiredService<ApiEmailService>();
@@ -47,8 +47,17 @@ namespace email_app_api.Services
                     && (localTimeNow - task.StartDate).Days > 0) //utc vulnerable
                 {
                     Models.UserEntity user = userService.GetUser(task.UserId);
-                    await apiEmailService.SendEmailAsync(user.Email, task);
-                    taskService.UpdateLastExecutedDate(task.Id, localTimeNow);
+                    try
+                    {
+                        Thread thread = new Thread(() => apiEmailService.SendEmail(user.Email, task));
+                        semaphore.WaitOne();
+                        thread.Start();
+                    }
+                    finally
+                    {
+                        semaphore.Release();
+                        taskService.UpdateLastExecutedDate(task.Id, localTimeNow);
+                    }
                 }
             }
         }

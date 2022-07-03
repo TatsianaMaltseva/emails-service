@@ -19,17 +19,17 @@ namespace email_app_api.Services
             connectionString = dbOptions.Value.ConnectionString;
         }
 
-        public async Task SendEmailAsync(string email, Models.Task task)
+        public void SendEmail(string email, Models.Task task)
         {
             HttpRequestMessage request = new CustomHttpRequestMessage(
                 task,
                 GetApi((Topic)Enum.Parse(typeof(Topic), task.Topic, true))
             );
             HttpClient client = new HttpClient();
-            using var response = await client.SendAsync(request);
+            using var response = client.Send(request);
             response.EnsureSuccessStatusCode();
             Stream data = response.Content.ReadAsStream();
-            await SendEmailAsync(email, "", "Hey, have a good day!", data);
+            SendEmail(email, "", "Hey, have a good day!", data);
         }
 
         private HttpRequestMessageData GetApi(Topic topic)
@@ -54,7 +54,7 @@ namespace email_app_api.Services
             }
         }
 
-        private async Task SendEmailAsync(string email, string subject, string message, Stream file)
+        private void SendEmail(string email, string subject, string message, Stream file)
         {
             MimeMessage emailMessage = new MimeMessage();
             emailMessage.From.Add(new MailboxAddress("Email service", "tanjamaltzevatanja@yandex.ru"));
@@ -81,10 +81,10 @@ namespace email_app_api.Services
 
             using (var client = new SmtpClient())
             {
-                await client.ConnectAsync("smtp.yandex.ru", 465, MailKit.Security.SecureSocketOptions.SslOnConnect);
-                await client.AuthenticateAsync("tanjamaltzevatanja", "skjdivnskjvb");
-                await client.SendAsync(emailMessage);
-                await client.DisconnectAsync(true);
+                client.Connect("smtp.yandex.ru", 465, MailKit.Security.SecureSocketOptions.SslOnConnect);
+                client.Authenticate("tanjamaltzevatanja", "skjdivnskjvb");
+                client.Send(emailMessage);
+                client.Disconnect(true);
             }
         }
     }
