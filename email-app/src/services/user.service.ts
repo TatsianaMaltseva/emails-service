@@ -67,6 +67,11 @@ export class UserService {
       )
   }
 
+  public logout(): void {
+    this._id = undefined;
+    this._role = undefined;
+  }
+
   public getUsers(): Observable<User[]> {
     let httpParams = new HttpParams();
     if (this.id) {

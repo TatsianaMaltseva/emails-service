@@ -1,4 +1,17 @@
-<button mat-raised-button (click)="openLoginDialog()">Login</button>
+<button
+    *ngIf="!isLoggedIn"
+    mat-raised-button
+    (click)="openLoginDialog()"
+>
+    Login
+</button>
+<button
+    *ngIf="isLoggedIn"
+    mat-raised-button
+    (click)="logout()"
+>
+    Logout
+</button>
 <span *ngIf="isLoggedIn">
     <button mat-raised-button routerLink="/tasks">Tasks</button>
     <button mat-raised-button (click)="openNewTaskDialog()">Add new task</button>

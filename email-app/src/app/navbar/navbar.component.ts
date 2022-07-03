@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { TaskService } from 'src/services/task.service';
 
@@ -11,7 +11,7 @@ import { TaskComponent } from '../task/task.component';
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css']
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit {
   public get isAdmin(): boolean {
     return this.userService.isAdmin
   }
@@ -27,6 +27,10 @@ export class NavbarComponent {
   ) {
   }
 
+  ngOnInit(): void {
+    if (!this.isLoggedIn) this.openLoginDialog();
+  }
+
   public openLoginDialog(): void {
     this.matDialog.open(
       LoginComponent,
@@ -35,6 +39,10 @@ export class NavbarComponent {
       }
     )
   };
+
+  public logout(): void {
+    this.userService.logout();
+  }
 
   public openNewTaskDialog(): void {
     this.taskService.setCurrentlyOpenedTaskId(null);
