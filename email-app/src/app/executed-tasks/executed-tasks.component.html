@@ -1,4 +1,4 @@
-<p>Last 10 task invoations</p>
+<p>Last 10 task invocations</p>
 <table mat-table [dataSource]="executedTasks">
     <tr *matHeaderRowDef="tableColumns" mat-header-row></tr>
     <tr *matRowDef="let row; columns: tableColumns" mat-row></tr>
@@ -15,11 +15,11 @@
 
     <ng-container matColumnDef="startDate">
         <th mat-header-cell *matHeaderCellDef>Start date</th>
-        <td mat-cell *matCellDef="let task">US${{ task.startDate }}</td>
+        <td mat-cell *matCellDef="let task">{{ task.startDate }}</td>
     </ng-container>
 
     <ng-container matColumnDef="lastExecuted">
         <th mat-header-cell *matHeaderCellDef>Last executed</th>
-        <td mat-cell *matCellDef="let task">US${{ task.lastExecuted }}</td>
+        <td mat-cell *matCellDef="let task">{{ task.lastExecuted }}</td>
     </ng-container>
 </table>

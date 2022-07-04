@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+
 import { environment } from 'src/environments/environment';
 
 export interface ExecutedTask {
@@ -16,7 +17,6 @@ export interface ExecutedTask {
 export class ExecutedTasksService {
   private readonly apiUrl: string;
   private _currentlyOpenedUserId: number | null = null;
-  private readonly dateTimeFormat = 'MMMM D, YYYY h:mm A';
 
   public get getCurrentlyOpenedUserId(): number | null {
     return this._currentlyOpenedUserId;
@@ -38,5 +38,4 @@ export class ExecutedTasksService {
         `${this.apiUrl}users/${this._currentlyOpenedUserId}/executedtasks`
       )
   }
-
 }

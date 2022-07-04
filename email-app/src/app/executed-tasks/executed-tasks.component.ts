@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import * as dayjs from 'dayjs';
 
 import { ExecutedTask, ExecutedTasksService } from 'src/services/executed-tasks.service';
 
@@ -15,6 +16,7 @@ export class ExecutedTasksComponent implements OnInit {
     'startDate', 
     'lastExecuted'
   ];
+  private readonly dateTimeFormat = 'MMMM D, YYYY h:mm A';
 
   public constructor(
     private readonly executedTasksService: ExecutedTasksService,
@@ -26,8 +28,16 @@ export class ExecutedTasksComponent implements OnInit {
       .getExecutedTasks()
       .subscribe(
         ((executedTasks: ExecutedTask[]) => {
+          executedTasks.forEach(executedTask => {
+            executedTask.executed = this.formatDate(executedTask.executed);
+            executedTask.lastExecuted = this.formatDate(executedTask.lastExecuted);
+            executedTask.startDate = this.formatDate(executedTask.startDate);
+          });
           this.executedTasks = executedTasks;
         })
       )
   }
+
+  private formatDate = (date: string): string => 
+    dayjs(new Date(date)).format(this.dateTimeFormat);
 }
