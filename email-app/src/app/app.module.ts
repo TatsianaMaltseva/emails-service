@@ -12,6 +12,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { MatTableModule } from '@angular/material/table';
 import { CronEditorModule } from 'ngx-cron-editor';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -24,6 +25,7 @@ import { TaskDialogComponent } from './task-dialog/task-dialog.component';
 import { TasksComponent } from './tasks/tasks.component';
 import { WelcomePageComponent } from './welcome-page/welcome-page.component';
 import { UsersComponent } from './users/users.component';
+import { ExecutedTasksComponent } from './executed-tasks/executed-tasks.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +37,8 @@ import { UsersComponent } from './users/users.component';
     TaskDialogComponent,
     TasksComponent,
     WelcomePageComponent,
-    UsersComponent
+    UsersComponent,
+    ExecutedTasksComponent
   ],
   imports: [
     BrowserModule,
@@ -52,6 +55,7 @@ import { UsersComponent } from './users/users.component';
     MatSelectModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatTableModule,
     CronEditorModule
   ],
   providers: [],

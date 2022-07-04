@@ -1,0 +1,25 @@
+<p>Last 10 task invoations</p>
+<table mat-table [dataSource]="executedTasks">
+    <tr *matHeaderRowDef="tableColumns" mat-header-row></tr>
+    <tr *matRowDef="let row; columns: tableColumns" mat-row></tr>
+
+    <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Task name</th>
+        <td mat-cell *matCellDef="let task">{{ task.name }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="executed">
+        <th mat-header-cell *matHeaderCellDef>Executed</th>
+        <td mat-cell *matCellDef="let task">{{ task.executed }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="startDate">
+        <th mat-header-cell *matHeaderCellDef>Start date</th>
+        <td mat-cell *matCellDef="let task">US${{ task.startDate }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="lastExecuted">
+        <th mat-header-cell *matHeaderCellDef>Last executed</th>
+        <td mat-cell *matCellDef="let task">US${{ task.lastExecuted }}</td>
+    </ng-container>
+</table>

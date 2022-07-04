@@ -2,6 +2,7 @@
     <span *ngFor="let user of users; last as last">
         <mat-list-item class="list-element">
             {{ user.id }} {{ user.email }} {{ user.role }}
+            <button mat-button (click)="openExecutedTaskDialog(user.id)">Check statistics</button>
             <mat-divider *ngIf="!last"></mat-divider>
         </mat-list-item>
     </span>
