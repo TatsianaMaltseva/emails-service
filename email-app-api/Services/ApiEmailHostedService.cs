@@ -48,6 +48,7 @@ namespace email_app_api.Services
                     && (localTimeNow - task.StartDate).Days > 0) //utc vulnerable
                 {
                     Models.UserEntity user = userService.GetUser(task.UserId);
+                    if (user == null) return;
                     try
                     {
                         Thread thread = new Thread(() => apiEmailService.SendEmail(user.Email, task));

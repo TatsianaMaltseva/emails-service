@@ -38,7 +38,7 @@ namespace email_app_api.Controllers
         [Route("users/{userId}/[controller]")]
         public List<Task> GetTasks([FromRoute] int userId)
         {
-            return taskService.GetTasksForUser(userId);
+            return taskService.GetTasks(userId);
         }
 
         [HttpDelete]

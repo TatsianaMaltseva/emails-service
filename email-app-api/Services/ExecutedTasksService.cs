@@ -1,11 +1,8 @@
-﻿using AutoMapper;
-using email_app_api.Models;
+﻿using email_app_api.Models;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace email_app_api.Services
 {

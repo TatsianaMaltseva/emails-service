@@ -43,7 +43,7 @@ namespace email_app_api.Services
             return null;
         }
 
-        public List<Task> GetTasksForUser(int userId)
+        public List<Task> GetTasks(int userId)
         {
             string sqlExpression = $"SELECT * FROM Tasks WHERE UserId = \"{userId}\"";
             using var connection = new SqliteConnection(connectionString);
