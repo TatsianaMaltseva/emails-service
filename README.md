@@ -35,5 +35,6 @@ csv files processing was added
 
 multiple threads works with sending email tasks;
 logout was added;
-api structure changed, data is stored in db now
+api structure changed, data is stored in db now;
+role based token auth with expiration time
 
