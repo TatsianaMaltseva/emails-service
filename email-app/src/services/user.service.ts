@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
 import { environment } from 'src/environments/environment';
-import { roles } from 'src/Roles';
+import { roles } from 'src/core/Roles';
 
 export interface LoginResponse {
   id: number;
