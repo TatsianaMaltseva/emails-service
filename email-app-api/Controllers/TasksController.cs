@@ -1,5 +1,6 @@
 ﻿using email_app_api.Models;
 using email_app_api.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 
@@ -15,6 +16,7 @@ namespace email_app_api.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         [Route("users/{userId}/[controller]")]
         public IActionResult AddTask([FromRoute] int userId, [FromBody] Task task)
         {
@@ -25,6 +27,7 @@ namespace email_app_api.Controllers
         }
 
         [HttpPut]
+        [Authorize]
         [Route("users/{userId}/[controller]/{taskId}")]
         public IActionResult EditTask([FromRoute] int taskId, [FromBody] Task task)
         {
@@ -35,6 +38,7 @@ namespace email_app_api.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         [Route("users/{userId}/[controller]")]
         public List<Task> GetTasks([FromRoute] int userId)
         {
@@ -42,6 +46,7 @@ namespace email_app_api.Controllers
         }
 
         [HttpDelete]
+        [Authorize]
         [Route("users/{userId}/[controller]/{taskId}")]
         public IActionResult DeleteTask([FromRoute] int taskId)
         {

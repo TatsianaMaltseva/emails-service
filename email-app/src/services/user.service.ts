@@ -2,13 +2,22 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { JwtHelperService } from '@auth0/angular-jwt';
 
 import { environment } from 'src/environments/environment';
 import { roles } from 'src/core/Roles';
+import { tokenGetter } from 'src/app/app.module';
 
 export interface LoginResponse {
+ token: string;
+}
+
+export interface Token {
   id: number;
   role: string;
+  exp: number;
+  iss: string;
+  aud: string;
 }
 
 export interface User {
@@ -22,41 +31,37 @@ export interface User {
 })
 export class UserService {
   private readonly apiUrl: string;
-  private _id: number | undefined;
-  private _role: string | undefined;
-  private _email: string | undefined;
-
-  public get role(): string | null {
-    if (this._role) {
-      return this._role;
-    }
-    return null;
-  }
 
   public get id(): number | null {
-    if (this._id) {
-      return this._id;
-    }
-    return null;
-  }
-
-  public get email(): string | null {
-    if (this._email) {
-      return this._email
+    if (this.isLoggedIn) {
+      return this.decodedToken.id;
     }
     return null;
   }
 
   public get isLoggedIn(): boolean {
-    return !!this._id;
+    const token: string | null = tokenGetter();
+    return token !== null && !this.jwtHelper.isTokenExpired(token);
   }
 
   public get isAdmin(): boolean {
     return this.isLoggedIn && this.role === roles.admin
   }
 
+  private get decodedToken(): Token {
+    return this.jwtHelper.decodeToken(tokenGetter()!);
+  }
+
+  private get role(): string | null {
+    if (this.isLoggedIn) {
+      return this.decodedToken.role;
+    }
+    return null;
+  }
+
   public constructor(
     private readonly http: HttpClient,
+    private readonly jwtHelper: JwtHelperService
   ) {
     this.apiUrl = environment.api;
   }
@@ -64,20 +69,18 @@ export class UserService {
   public login(email: string, password: string): Observable<LoginResponse> {
     return this.http
       .post<LoginResponse>(
-        `${this.apiUrl}users`,
+        `${this.apiUrl}login`,
         { email, password }
       )
       .pipe(
-        tap((userData: LoginResponse) => {
-          this._id = userData.id;
-          this._role = userData.role;
+        tap((response: LoginResponse) => {
+          localStorage.setItem(environment.jwt, response.token);
         })
-      )
+      );
   }
 
   public logout(): void {
-    this._id = undefined;
-    this._role = undefined;
+    localStorage.removeItem(environment.jwt);
   }
 
   public getUsers(): Observable<User[]> {

@@ -2,8 +2,8 @@
 {
     public static class Roles
     {
-        public static readonly string Admin = "Admin";
+        public const string Admin = "Admin";
 
-        public static readonly string Client = "Client";
+        public const string Client = "Client";
     }
 }

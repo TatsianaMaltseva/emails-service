@@ -17,23 +17,9 @@ namespace email_app_api.Services
             connectionString = dbOptions.Value.ConnectionString;
         }
 
-        public LoginResponse Login(LoginRequest loginRequest)
-        {
-            UserEntity user = GetUser(loginRequest.Email, loginRequest.Password);
-            if (user != null)
-            {
-                return mapper.Map<LoginResponse>(user);
-            }
-            return null;
-        }
-
         public List<User> GetUsers(int currerntUserId)
         {
             UserEntity user = GetUser(currerntUserId);
-            if (user.Role != Roles.Admin)
-            {
-                return null;
-            }
             List<UserEntity> userEntities = GetUsers();
             return mapper.Map<List<UserEntity>, List<User>>(userEntities);
         }
@@ -49,7 +35,8 @@ namespace email_app_api.Services
                 if (reader.HasRows)
                 {
                     reader.Read();
-                    return GetUserFromReader(reader);
+                    UserEntity user = GetUserFromReader(reader);
+
                 }
             }
             return null;
@@ -76,7 +63,7 @@ namespace email_app_api.Services
             return userEntities;
         }
 
-        private UserEntity GetUser(string email, string password)
+        public User GetUser(string email, string password)
         {
             string sqlExpression = $"SELECT * FROM Users WHERE Email = \"{email}\" AND Password = \"{password}\"";
             using var connection = new SqliteConnection(connectionString);
@@ -87,7 +74,8 @@ namespace email_app_api.Services
                 if (reader.HasRows)
                 {
                     reader.Read();
-                    return GetUserFromReader(reader);
+                    UserEntity userEntity = GetUserFromReader(reader);
+                    return mapper.Map<User>(userEntity);
                 }
             }
             return null;

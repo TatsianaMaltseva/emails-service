@@ -10,8 +10,6 @@ namespace email_app_api.Services
             CreateMap<UserEntity, User>()
                 .ReverseMap();
 
-            CreateMap<UserEntity, LoginResponse>();
-
             CreateMap<TaskEntity, Task>()
                 .ReverseMap();
         }

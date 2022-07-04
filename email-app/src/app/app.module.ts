@@ -14,6 +14,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatTableModule } from '@angular/material/table';
 import { CronEditorModule } from 'ngx-cron-editor';
+import { JwtModule } from '@auth0/angular-jwt';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -26,6 +27,11 @@ import { TasksComponent } from './tasks/tasks.component';
 import { WelcomePageComponent } from './welcome-page/welcome-page.component';
 import { UsersComponent } from './users/users.component';
 import { ExecutedTasksComponent } from './executed-tasks/executed-tasks.component';
+import { environment } from 'src/environments/environment';
+
+export function tokenGetter() { 
+  return localStorage.getItem(environment.jwt); 
+}
 
 @NgModule({
   declarations: [
@@ -56,7 +62,14 @@ import { ExecutedTasksComponent } from './executed-tasks/executed-tasks.componen
     MatDatepickerModule,
     MatNativeDateModule,
     MatTableModule,
-    CronEditorModule
+    CronEditorModule,
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: tokenGetter,
+        allowedDomains:  environment.allowedDomains,
+        disallowedRoutes: []
+      }
+    })
   ],
   providers: [],
   bootstrap: [AppComponent]
