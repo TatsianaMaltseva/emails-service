@@ -32,6 +32,7 @@ namespace email_app_api.Services
             ApiEmailService apiEmailService = scope.ServiceProvider.GetRequiredService<ApiEmailService>();
             TaskService taskService = scope.ServiceProvider.GetRequiredService<TaskService>();
             UserService userService = scope.ServiceProvider.GetRequiredService<UserService>();
+            ExecutedTasksService executedTasksService = scope.ServiceProvider.GetRequiredService<ExecutedTasksService>();
             List<Models.Task> tasks = taskService.GetTasks();
 
             foreach(Models.Task task in tasks)
@@ -57,6 +58,7 @@ namespace email_app_api.Services
                     {
                         semaphore.Release();
                         taskService.UpdateLastExecutedDate(task.Id, localTimeNow);
+                        executedTasksService.AddExecutedTask(user.Id, task, localTimeNow);
                     }
                 }
             }

@@ -24,6 +24,7 @@ export class UserService {
   private readonly apiUrl: string;
   private _id: number | undefined;
   private _role: string | undefined;
+  private _email: string | undefined;
 
   public get role(): string | null {
     if (this._role) {
@@ -35,6 +36,13 @@ export class UserService {
   public get id(): number | null {
     if (this._id) {
       return this._id;
+    }
+    return null;
+  }
+
+  public get email(): string | null {
+    if (this._email) {
+      return this._email
     }
     return null;
   }
