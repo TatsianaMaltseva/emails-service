@@ -30,9 +30,10 @@ topic settings were added
 ![image](https://user-images.githubusercontent.com/54571357/177085973-8ade3892-bea5-4e82-9cb4-f3a9b987378d.png)
 moment to start send tasks was added
 
-multiple threads works with sending email tasks
-logout was added
-api structure changed; data is stored in db now
-
 ![image](https://user-images.githubusercontent.com/54571357/177086382-badf4f01-7e8e-4e92-96d7-dbd39e949f82.png)
 csv files processing was added
+
+multiple threads works with sending email tasks;
+logout was added;
+api structure changed, data is stored in db now
+
